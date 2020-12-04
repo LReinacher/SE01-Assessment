@@ -4,7 +4,11 @@ import sys
 
 class SlidingGame:
     def __init__(self):
-        self._board = np.array([[1, 8, 2], [4, 3, 5], [7, 6, np.NaN]])
+        self._board = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, np.NaN, 12], [13, 14, 11, 15]])
+        self._valid_numbers = self._board[~np.isnan(self._board)]
+
+    def is_number_valid(self, number: int):
+        return number in self._valid_numbers
         
     def _print_board(self):
         print(self._board)
@@ -29,7 +33,7 @@ class SlidingGame:
 
     def _is_board_ordered(self):
         try:
-            np.testing.assert_equal(np.sort(self._board), self._board)
+            np.testing.assert_equal(np.sort(self._board[~np.isnan(self._board)]), self._board[~np.isnan(self._board)])
         except AssertionError:
             return False
         return True
@@ -49,7 +53,7 @@ class SlidingGame:
             piece = input(">> ")
             try:
                 piece_number = int(piece)
-                if not 1 <= piece_number <= 8:
+                if not game.is_number_valid(piece_number):
                     raise TypeError
                 if not self._move_piece_by_number(piece_number):
                     print("This move is not allowed!")
